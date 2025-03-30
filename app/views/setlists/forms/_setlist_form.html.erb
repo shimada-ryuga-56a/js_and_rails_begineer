@@ -1,0 +1,6 @@
+<%= form_with model: setlist, local: true do |f| %>
+  <%= f.fields_for :setlist_items do |i| %>
+    <%= render partial: "setlists/forms/setlist_item_form", locals: { i: i } %>
+  <% end %>
+  <%= f.submit "登録", class: "btn btn-primary" %>
+<% end %>
