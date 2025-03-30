@@ -18,7 +18,7 @@ module Myapp
 
     config.generators do |g|
       g.skip_routes true
-      g.test_framework nill
+      g.test_framework nil
       g.helper false
     end
 
