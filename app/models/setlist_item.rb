@@ -1,0 +1,2 @@
+class SetlistItem < ApplicationRecord
+end
