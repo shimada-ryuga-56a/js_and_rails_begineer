@@ -9,4 +9,10 @@ class Setlist < ApplicationRecord
       item.remove_empty_song_title
     end
   end
+
+  def set_position_to_items
+    setlist_items.each_with_index do |item, index|
+      item.position = index + 1
+    end
+  end
 end
