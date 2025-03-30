@@ -1,0 +1,7 @@
+<div class="my-4">
+  <div class="flex">
+    <p><%= setlist.id %></p>
+    <p class="ml-4 link"><%= link_to "編集", edit_setlist_path(setlist) %></p>
+  </div>
+  <%= render partial: "setlist_items", locals: { items: setlist.setlist_items } %>
+</div>

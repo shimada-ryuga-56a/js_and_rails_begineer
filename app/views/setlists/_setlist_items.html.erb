@@ -1,0 +1,11 @@
+
+
+<div class="overflow-x-auto">
+  <table class="table table-zebra">
+    <tbody>
+      <% items.each do |item| %>
+        <%= render partial: "setlist_item", locals: { item: item } %>
+      <% end %>
+    </tbody>
+  </table>
+</div>
