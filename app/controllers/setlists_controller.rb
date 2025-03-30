@@ -1,6 +1,6 @@
 class SetlistsController < ApplicationController
   def index
-    @setlists = Setlist.all.includes(:setlist_items)
+    @setlists = Setlist.all.includes(:setlist_items).order(id: :desc)
   end
 
   def new
