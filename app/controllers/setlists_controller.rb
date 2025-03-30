@@ -8,14 +8,12 @@ class SetlistsController < ApplicationController
     20.times do
       @setlist.setlist_items.build
     end
-    @setlist.setlist_items.each_with_index do |item, index|
-      item.position = index + 1
-    end
   end
 
   def create
     @setlist = Setlist.new(setlist_params)
     @setlist.filter_no_title_items
+    @setlist.set_position_to_items
     p "=" * 50
     p @setlist.setlist_items
     p "=" * 50
