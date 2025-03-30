@@ -1,0 +1,8 @@
+<%= form_with model: setlist, local: true do |f| %>
+  <%= render partial: "shared/error_message", locals: { model: setlist } %>
+  <%= f.fields_for :setlist_items do |i| %>
+
+    <%= render partial: "setlists/forms/setlist_item_form", locals: { i: i } %>
+  <% end %>
+  <%= f.submit "登録", class: "btn btn-primary" %>
+<% end %>

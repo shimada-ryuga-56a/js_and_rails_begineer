@@ -1,0 +1,7 @@
+<div class="mb-4">
+  <% if flash[:success] %>
+    <%= render partial: "shared/flash_messages/success", locals: { message: flash[:success] } %>
+  <% elsif flash[:error] %>
+    <%= render partial: "shared/flash_messages/error", locals: { message: flash[:error] } %>
+  <% end %>
+</div>
