@@ -14,11 +14,31 @@ class SetlistsController < ApplicationController
   end
 
   def create
+    @setlist = Setlist.new(setlist_params)
+    @setlist.filter_no_title_items
+    p "=" * 50
+    p @setlist.setlist_items
+    p "=" * 50
+    if @setlist.save
+      flash[:success] = "セットリストを登録しました。"
+      redirect_to setlists_path
+    else
+      flash.now[:error] = "セットリストの登録に失敗しました。"
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def edit
   end
 
   def update
+  end
+
+  private
+
+  def setlist_params
+    params.require(:setlist).permit(
+      setlist_items_attributes: %i(song_title position)
+    )
   end
 end
