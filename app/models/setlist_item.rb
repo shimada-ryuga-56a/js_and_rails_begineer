@@ -7,7 +7,7 @@ class SetlistItem < ApplicationRecord
   def remove_empty_song_title
     if song_title.blank?
       self.mark_for_destruction
-      p "削除しました"
+      Rails.logger.info "削除しました"
     end
   end
 end
