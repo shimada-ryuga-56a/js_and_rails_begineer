@@ -1,9 +1,12 @@
 <%= form_with model: setlist, local: true do |f| %>
   <%= render partial: "shared/error_message", locals: { model: setlist } %>
-  <%= f.fields_for :setlist_items do |i| %>
 
-    <%= render partial: "setlists/forms/setlist_item_form", locals: { i: i } %>
-  <% end %>
+  <div id="setlist_items_container">
+    <%= f.fields_for :setlist_items do |i| %>
+      <%= render partial: "setlists/forms/setlist_item_form", locals: { i: i } %>
+    <% end %>
+  </div>
+
   <button id="add_setlist_item" type="button" class="btn btn-secondary mb-4">
     曲を追加
   </button>
