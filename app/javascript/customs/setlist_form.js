@@ -7,8 +7,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
   // 「曲を追加」ボタンにイベントを設定
   addItemButton.addEventListener("click", (event) => {
     console.log("楽曲追加ボタンが押された");
-    const newItemForm = document.getElementById("template_setlist_item");
-    console.log(newItemForm);
+    const itemForm = document.getElementById("template_setlist_item");
+    const itemFormClone = itemForm.children[0].cloneNode(true);
+    console.log(itemFormClone);
     counter();
     console.log(count);
   });
