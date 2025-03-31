@@ -2,3 +2,4 @@
 import "@hotwired/turbo-rails"
 import "./controllers"
 import "./customs/hello_world"
+import "./customs/setlist_form"
