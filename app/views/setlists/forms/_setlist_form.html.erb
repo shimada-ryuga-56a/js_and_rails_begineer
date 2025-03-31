@@ -4,5 +4,10 @@
 
     <%= render partial: "setlists/forms/setlist_item_form", locals: { i: i } %>
   <% end %>
-  <%= f.submit "登録", class: "btn btn-primary" %>
+  <button id="add_setlist_item" type="button" class="btn btn-secondary mb-4">
+    曲を追加
+  </button>
+  <div>
+    <%= f.submit "登録", class: "btn btn-primary" %>
+  </div>
 <% end %>
