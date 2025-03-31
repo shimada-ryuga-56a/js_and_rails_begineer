@@ -1,3 +1,5 @@
+let count = 0;
+
 document.addEventListener("DOMContentLoaded", (event) => {
   console.log("セットリスト登録フォーム用js");
   const addItemButton = document.getElementById("add_setlist_item");
@@ -7,5 +9,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
     console.log("楽曲追加ボタンが押された");
     const newItemForm = document.getElementById("template_setlist_item");
     console.log(newItemForm);
+    counter();
+    console.log(count);
   });
+
+  function counter() {
+    count++;
+    return count;
+  }
 });
