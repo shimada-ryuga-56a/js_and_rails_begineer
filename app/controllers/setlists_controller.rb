@@ -5,9 +5,7 @@ class SetlistsController < ApplicationController
 
   def new
     @setlist = Setlist.new
-    20.times do
-      @setlist.setlist_items.build
-    end
+    @setlist.setlist_items.build
   end
 
   def create
