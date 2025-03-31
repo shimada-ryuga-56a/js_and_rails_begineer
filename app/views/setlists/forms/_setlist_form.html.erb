@@ -7,6 +7,12 @@
     <% end %>
   </div>
 
+  <div id="template_setlist_item" style="display: none;">
+    <%= f.fields_for :setlist_items, SetlistItem.new, child_index: "new_record" do |builder| %>
+      <%= render partial: "setlists/forms/setlist_item_form", locals: { i: builder } %>
+    <% end %>
+  </div>
+
   <button id="add_setlist_item" type="button" class="btn btn-secondary mb-4">
     曲を追加
   </button>
