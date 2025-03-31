@@ -1,10 +1,15 @@
 let count = 0;
 
-document.addEventListener("DOMContentLoaded", (event) => {
+document.addEventListener("turbo:load", (event) => {
   console.log("セットリスト登録フォーム用js");
   const addItemButton = document.getElementById("add_setlist_item");
   const setlistItemContainer = document.getElementById("setlist_items_container");
   const itemForm = document.getElementById("template_setlist_item");
+
+  if (!addItemButton || !setlistItemContainer || !itemForm) {
+    console.log("必要な要素が見つかりません");
+    return;
+  }
 
   // 「曲を追加」ボタンにイベントを設定
   addItemButton.addEventListener("click", (event) => {
