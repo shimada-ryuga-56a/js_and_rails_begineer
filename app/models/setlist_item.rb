@@ -1,7 +1,7 @@
 class SetlistItem < ApplicationRecord
   belongs_to :setlist
 
-  validates :song_title, presence: true
+  validates :song_title, presence: true, length: { minimum: 2 }
   validates :position, presence: true, numericality: { only_integer: true }
 
   def remove_empty_song_title
