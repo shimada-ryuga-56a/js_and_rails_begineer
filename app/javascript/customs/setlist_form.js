@@ -1,7 +1,7 @@
-document.addEventListener("turbo:load", setupAddItemButton);
 document.addEventListener("turbo:load", setupRemoveButton);
-document.addEventListener("turbo:render", setupAddItemButton);
+document.addEventListener("turbo:load", setupAddItemButton);
 document.addEventListener("turbo:render", setupRemoveButton);
+document.addEventListener("turbo:render", setupAddItemButton);
 
 function setupAddItemButton() {
   const itemForms = document.querySelectorAll("[id^='setlist_setlist_items_attributes_'][id$='_song_title']");
@@ -34,6 +34,14 @@ function setupAddItemButton() {
     const itemFormClone = itemForm.children[0].cloneNode(true);
     itemFormClone.children[1].setAttribute("name", `setlist[setlist_items_attributes][${count}][song_title]`);
     itemFormClone.children[1].setAttribute("id", `setlist_setlist_items_attributes_${count}_song_title`);
+
+    const removeButton = itemFormClone.querySelector("[id^='remove_setlist_item']");
+    removeButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      const itemFormToRemove = removeButton.parentElement;
+      itemFormToRemove.remove();
+      console.log("削除ボタンが押されました");
+    });
     console.log(itemFormClone);
     setlistItemContainer.appendChild(itemFormClone);
   });
