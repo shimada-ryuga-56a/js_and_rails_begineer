@@ -23,6 +23,7 @@ class SetlistsController < ApplicationController
   end
 
   def edit
+    @setlist = Setlist.includes(:setlist_items).find(params[:id])
   end
 
   def update
