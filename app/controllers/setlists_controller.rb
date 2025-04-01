@@ -28,6 +28,17 @@ class SetlistsController < ApplicationController
   def update
   end
 
+  def destroy
+    @setlist = Setlist.find(params[:id])
+    if @setlist.destroy
+      flash[:success] = "セットリストを削除しました。"
+      redirect_to setlists_path
+    else
+      flash[:error] = "セットリストの削除に失敗しました。"
+      redirect_to setlists_path, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def setlist_params
