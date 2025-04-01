@@ -1,5 +1,8 @@
 document.addEventListener("turbo:load", setupAddItemButton);
+document.addEventListener("turbo:load", setupRemoveButton);
 document.addEventListener("turbo:render", setupAddItemButton);
+document.addEventListener("turbo:render", setupRemoveButton);
+
 function setupAddItemButton() {
   const itemForms = document.querySelectorAll("[id^='setlist_setlist_items_attributes_'][id$='_song_title']");
   const lastItemForm = itemForms[itemForms.length - 2];
@@ -39,4 +42,18 @@ function setupAddItemButton() {
     count++;
     return count;
   }
+};
+
+function setupRemoveButton() {
+  console.log("removeButton");
+  const removeButtons = document.querySelectorAll("[id^='remove_setlist_item']");
+  console.log(removeButtons);
+  removeButtons.forEach((removeButton) => {
+    removeButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      const itemFormToRemove = removeButton.parentElement;
+      itemFormToRemove.remove();
+      console.log("削除ボタンが押されました");
+    });
+  });
 };
