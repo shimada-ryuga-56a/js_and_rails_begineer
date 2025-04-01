@@ -10,5 +10,5 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "static_pages#top"
 
-  resources :setlists, only: %i[index new create edit update]
+  resources :setlists, only: %i[index new create edit update destroy]
 end
