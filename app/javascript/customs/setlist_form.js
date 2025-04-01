@@ -1,6 +1,5 @@
-document.addEventListener("turbo:load", setupAddItemButton, console.log("turbo:load"));
-document.addEventListener("turbo:render", setupAddItemButton, console.log("turbo:render"));
-
+document.addEventListener("turbo:load", setupAddItemButton);
+document.addEventListener("turbo:render", setupAddItemButton);
 function setupAddItemButton() {
   let count = 0;
   console.log("セットリスト登録フォーム用js");
