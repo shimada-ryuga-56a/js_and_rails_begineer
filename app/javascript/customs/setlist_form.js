@@ -1,3 +1,4 @@
+document.addEventListener("turbo:load", setupAddItemButton, console.log("turbo:load"));
 document.addEventListener("turbo:render", setupAddItemButton, console.log("turbo:render"));
 
 function setupAddItemButton() {
@@ -13,18 +14,18 @@ function setupAddItemButton() {
   }
 
   // 「曲を追加」ボタンにイベントを設定
-  addItemButton.addEventListener("click", (event) => {
-    console.log("楽曲追加ボタンが押された");
-    counter();
+  addItemButton.addEventListener("click", addItemform);
+
+  function counter() {
+    count++;
+    return count;
+  }
+
+  function addItemform() {
     const itemFormClone = itemForm.children[0].cloneNode(true);
     itemFormClone.children[1].setAttribute("name", `setlist[setlist_items_attributes][${count}][song_title]`);
     itemFormClone.children[1].setAttribute("id", `setlist_setlist_items_attributes_${count}_song_title`);
     console.log(itemFormClone);
     setlistItemContainer.appendChild(itemFormClone);
-  });
-
-  function counter() {
-    count++;
-    return count;
   }
 };
