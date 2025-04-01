@@ -36,6 +36,7 @@ function setupAddItemButton() {
     itemFormClone.children[1].setAttribute("id", `setlist_setlist_items_attributes_${count}_song_title`);
 
     const removeButton = itemFormClone.querySelector("[id^='remove_setlist_item']");
+    removeButton.setAttribute("id", `remove_setlist_item_${count}`);
     removeButton.addEventListener("click", (event) => {
       event.preventDefault();
       const itemFormToRemove = removeButton.parentElement;
@@ -54,9 +55,10 @@ function setupAddItemButton() {
 
 function setupRemoveButton() {
   console.log("removeButton");
-  const removeButtons = document.querySelectorAll("[id^='remove_setlist_item']");
+  const removeButtons = document.querySelectorAll("[id^='remove_setlist_item_']");
   console.log(removeButtons);
-  removeButtons.forEach((removeButton) => {
+  removeButtons.forEach((removeButton, index) => {
+    removeButton.setAttribute("id", `remove_setlist_item_${index}`);
     removeButton.addEventListener("click", (event) => {
       event.preventDefault();
       const itemFormToRemove = removeButton.parentElement;
