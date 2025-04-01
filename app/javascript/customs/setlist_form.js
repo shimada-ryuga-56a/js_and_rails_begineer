@@ -1,7 +1,11 @@
 document.addEventListener("turbo:load", setupAddItemButton);
 document.addEventListener("turbo:render", setupAddItemButton);
 function setupAddItemButton() {
-  let count = 0;
+  const itemForms = document.querySelectorAll("[id^='setlist_setlist_items_attributes_'][id$='_song_title']");
+  const lastItemForm = itemForms[itemForms.length - 2];
+  const lastItemFormId = lastItemForm ? lastItemForm.id : null;
+  const lastItemFormIndex = lastItemFormId ? parseInt(lastItemFormId.match(/\d+/)[0]) : null;
+  let count = lastItemFormIndex;
   console.log("セットリスト登録フォーム用js");
   const addItemButton = document.getElementById("add_setlist_item");
   const setlistItemContainer = document.getElementById("setlist_items_container");
@@ -23,6 +27,7 @@ function setupAddItemButton() {
   // 「曲を追加」ボタンにイベントを設定
   addItemButton.addEventListener("click", () => {
     counter();
+    console.log("カウント", count);
     const itemFormClone = itemForm.children[0].cloneNode(true);
     itemFormClone.children[1].setAttribute("name", `setlist[setlist_items_attributes][${count}][song_title]`);
     itemFormClone.children[1].setAttribute("id", `setlist_setlist_items_attributes_${count}_song_title`);
