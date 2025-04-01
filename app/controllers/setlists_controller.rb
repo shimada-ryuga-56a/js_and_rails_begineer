@@ -5,9 +5,7 @@ class SetlistsController < ApplicationController
 
   def new
     @setlist = Setlist.new
-    20.times do
-      @setlist.setlist_items.build
-    end
+    @setlist.setlist_items.build
   end
 
   def create
@@ -18,6 +16,7 @@ class SetlistsController < ApplicationController
       flash[:success] = "セットリストを登録しました。"
       redirect_to setlists_path
     else
+      @setlist.setlist_items.build if @setlist.setlist_items.empty?
       flash.now[:error] = "セットリストの登録に失敗しました。"
       render :new, status: :unprocessable_entity
     end
