@@ -66,6 +66,12 @@ function setupRemoveButton() {
       event.preventDefault();
       const itemFormToRemove = removeButton.parentElement;
       itemFormToRemove.remove();
+
+      const idFormToRemove = document.getElementById(`setlist_setlist_items_attributes_${index}_id`);
+      if (idFormToRemove) {
+        console.log("idFormToRemove", idFormToRemove);
+        idFormToRemove.remove();
+      }
       console.log("削除ボタンが押されました");
     });
   });
