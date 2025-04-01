@@ -13,6 +13,14 @@ function setupAddItemButton() {
     return;
   }
 
+  if (addItemButton.getAttribute("id") === "add_item_button") {
+    console.log("ボタンがすでに設定されています");
+    return;
+  } else {
+    console.log("ボタンが設定されていません");
+    addItemButton.setAttribute("id", "add_item_button");
+  }
+
   // 「曲を追加」ボタンにイベントを設定
   addItemButton.addEventListener("click", addItemform);
 
