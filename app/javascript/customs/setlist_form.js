@@ -56,8 +56,11 @@ function setupAddItemButton() {
 function setupRemoveButton() {
   console.log("removeButton");
   const removeButtons = document.querySelectorAll("[id^='remove_setlist_item_']");
-  console.log(removeButtons);
   removeButtons.forEach((removeButton, index) => {
+    if (removeButton.getAttribute("id") === `remove_setlist_item_${index}`) {
+      console.log("ボタンがすでに設定されています");
+      return;
+    }
     removeButton.setAttribute("id", `remove_setlist_item_${index}`);
     removeButton.addEventListener("click", (event) => {
       event.preventDefault();
