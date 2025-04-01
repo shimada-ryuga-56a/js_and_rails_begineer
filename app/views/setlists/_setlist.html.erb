@@ -2,6 +2,7 @@
   <div class="flex">
     <p><%= setlist.id %></p>
     <p class="ml-4 link"><%= link_to "編集", edit_setlist_path(setlist) %></p>
+    <p class="ml-4 link"><%= link_to "削除", setlist_path(setlist), data: { "turbo-method": :delete, "turbo-confirm": "本当に削除しますか？" } %></p>
   </div>
   <%= render partial: "setlist_items", locals: { items: setlist.setlist_items } %>
 </div>
