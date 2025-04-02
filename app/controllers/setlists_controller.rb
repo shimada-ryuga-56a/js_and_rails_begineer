@@ -27,6 +27,17 @@ class SetlistsController < ApplicationController
   end
 
   def update
+    @setlist = Setlist.find(params[:id])
+    if @setlist.update(setlist_params)
+      flash[:success] = "セットリストを更新しました。"
+      redirect_to setlists_path
+    else
+      p "=" * 50
+      p @setlist.errors.full_messages
+      p "=" * 50
+      flash.now[:error] = "セットリストの更新に失敗しました。"
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   def destroy
@@ -44,7 +55,7 @@ class SetlistsController < ApplicationController
 
   def setlist_params
     params.require(:setlist).permit(
-      setlist_items_attributes: %i(song_title position)
+      setlist_items_attributes: %i(song_title position id _destroy)
     )
   end
 end
