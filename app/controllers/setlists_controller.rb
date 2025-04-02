@@ -10,8 +10,6 @@ class SetlistsController < ApplicationController
 
   def create
     @setlist = Setlist.new(setlist_params)
-    @setlist.filter_no_title_items
-    @setlist.set_position_to_items
     if @setlist.save
       flash[:success] = "セットリストを登録しました。"
       redirect_to setlists_path
