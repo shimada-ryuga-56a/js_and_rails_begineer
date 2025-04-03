@@ -31,6 +31,10 @@ function initializeExamples() {
 
 function initializeDeleteButtons() {
   const examplesContainer = document.getElementById("examples-container");
+  if (!examplesContainer) {
+    console.log("examplesContainerが見つかりません");
+    return;
+  }
   examplesContainer.addEventListener("click", (event) => {
     console.log(event.target);
     if (event.target.id.startsWith("delete-example")) {
