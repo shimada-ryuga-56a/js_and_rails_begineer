@@ -11,4 +11,5 @@ Rails.application.routes.draw do
   root "static_pages#top"
 
   resources :setlists, only: %i[index new create edit update destroy]
+  resources :examples, only: %i[new]
 end
