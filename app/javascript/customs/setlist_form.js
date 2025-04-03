@@ -1,78 +1,64 @@
-document.addEventListener("turbo:load", setupRemoveButton);
+// document.addEventListener("turbo:load", setupRemoveButton);
+// document.addEventListener("turbo:load", setupAddItemButton);
+// document.addEventListener("turbo:render", setupRemoveButton);
+// document.addEventListener("turbo:render", setupAddItemButton);
+
 document.addEventListener("turbo:load", setupAddItemButton);
-document.addEventListener("turbo:render", setupRemoveButton);
+document.addEventListener("turbo:load", setupRemoveButton);
 document.addEventListener("turbo:render", setupAddItemButton);
-
-function setupAddItemButton() {
-  const itemForms = document.querySelectorAll("[id^='setlist_setlist_items_attributes_'][id$='_song_title']");
-  const lastItemForm = itemForms[itemForms.length - 2];
-  const lastItemFormId = lastItemForm ? lastItemForm.id : null;
-  const lastItemFormIndex = lastItemFormId ? parseInt(lastItemFormId.match(/\d+/)[0]) : null;
-  let count = lastItemFormIndex;
-  console.log("セットリスト登録フォーム用js");
-  const addItemButton = document.getElementById("add_setlist_item");
-  const setlistItemContainer = document.getElementById("setlist_items_container");
-  const itemForm = document.getElementById("template_setlist_item");
-
-  if (!addItemButton || !setlistItemContainer || !itemForm) {
-    console.log("必要な要素が見つかりません");
-    return;
-  }
-
-  if (addItemButton.getAttribute("id") === "add_item_button") {
-    console.log("ボタンがすでに設定されています");
-    return;
-  } else {
-    console.log("ボタンが設定されていません");
-    addItemButton.setAttribute("id", "add_item_button");
-  }
-
-  // 「曲を追加」ボタンにイベントを設定
-  addItemButton.addEventListener("click", () => {
-    counter();
-    console.log("カウント", count);
-    const itemFormClone = itemForm.children[0].cloneNode(true);
-    itemFormClone.children[1].setAttribute("name", `setlist[setlist_items_attributes][${count}][song_title]`);
-    itemFormClone.children[1].setAttribute("id", `setlist_setlist_items_attributes_${count}_song_title`);
-
-    const removeButton = itemFormClone.querySelector("[id^='remove_setlist_item']");
-    removeButton.setAttribute("id", `remove_setlist_item_${count}`);
-    removeButton.addEventListener("click", (event) => {
-      event.preventDefault();
-      const itemFormToRemove = removeButton.parentElement;
-      itemFormToRemove.remove();
-      console.log("削除ボタンが押されました");
-    });
-    console.log(itemFormClone);
-    setlistItemContainer.appendChild(itemFormClone);
-  });
-
-  function counter() {
-    count++;
-    return count;
-  }
-};
+document.addEventListener("turbo:render", setupRemoveButton);
+document.addEventListener("turbo:render", cleanupItemFormIDs);
 
 function setupRemoveButton() {
-  console.log("removeButton");
-  const removeButtons = document.querySelectorAll("[id^='remove_setlist_item_']");
-  removeButtons.forEach((removeButton, index) => {
-    if (removeButton.getAttribute("id") === `remove_setlist_item_${index}`) {
-      console.log("ボタンがすでに設定されています");
+  const setlistItemsContainer = document.getElementById("setlist_items_container");
+  if (!setlistItemsContainer) {
+    console.log("セットリスト登録において必要な要素が見つかりません");
+    return;
+  }
+
+  setlistItemsContainer.addEventListener("click", (event) => {
+    if (event.target.id.startsWith("remove_setlist_item_")) {
+      event.preventDefault();
+      const itemFormToRemove = event.target.parentElement;
+      itemFormToRemove.remove();
+      cleanupItemFormIDs();
+    } else {
+      console.log("削除ボタンが無効かも！");
+    }
+  });
+}
+
+function setupAddItemButton() {
+  const addButton = document.getElementById("add_setlist_item");
+  const setlistItemsContainer = document.getElementById("setlist_items_container");
+  const itemFormTemplate = document.getElementById("template_setlist_item");
+
+  if (!addButton || !setlistItemsContainer || !itemFormTemplate) {
+    console.log("セットリスト登録において必要な要素が見つかりません");
+    return;
+  }
+
+  addButton.addEventListener("click", () => {
+    const itemFormClone = itemFormTemplate.children[0].cloneNode(true);
+    itemFormClone.children[1].setAttribute("id", "setlist_setlist_items_attributes__song_title");
+    setlistItemsContainer.appendChild(itemFormClone);
+    cleanupItemFormIDs();
+  });
+}
+
+function cleanupItemFormIDs() {
+  const setlistItemForms = document.querySelectorAll('[id^="setlist_setlist_items_attributes_"][id$="_song_title"]');
+  if (setlistItemForms.length === 0) {
+    console.log("セットリストアイテムフォームが見つかりません");
+    return;
+  }
+
+  setlistItemForms.forEach((form, index) => {
+    if (setlistItemForms.length === index + 1) {
+      console.log("templateのため処理をスキップ");
       return;
     }
-    removeButton.setAttribute("id", `remove_setlist_item_${index}`);
-    removeButton.addEventListener("click", (event) => {
-      event.preventDefault();
-      const itemFormToRemove = removeButton.parentElement;
-      itemFormToRemove.remove();
-
-      const idFormToRemove = document.getElementById(`setlist_setlist_items_attributes_${index}_id`);
-      if (idFormToRemove) {
-        console.log("idFormToRemove", idFormToRemove);
-        idFormToRemove.remove();
-      }
-      console.log("削除ボタンが押されました");
-    });
+    form.setAttribute("id", `setlist_setlist_items_attributes_${index}_song_title`)
+    form.setAttribute("name", `setlist[setlist_items_attributes][${index}][song_title]`)
   });
-};
+}
