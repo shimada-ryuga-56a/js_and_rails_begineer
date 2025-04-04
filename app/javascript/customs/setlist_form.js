@@ -41,6 +41,7 @@ function setupRemoveButton() {
       const itemFormToRemove = event.target.parentElement;
       itemFormToRemove.remove();
       cleanupItemFormIDs();
+      setupHiddenIdForms();
     } else {
       console.log("削除ボタンが無効かも！");
     }
@@ -108,5 +109,19 @@ function moveHiddenSetlistItemForm(){
     console.log(childrenClone);
     parentDiv.appendChild(childrenClone);
     form.remove();
+  });
+}
+
+function setupHiddenIdForms() {
+  const hiddenItemIds = document.querySelectorAll('[id^="setlist_setlist_items_attributes_"][id$="_id"]');
+  if (hiddenItemIds.length === 0) {
+    console.log("隠しフォームが見つかりません");
+    return;
+  }
+  hiddenItemIds.forEach((form) => {
+    const parentDiv = form.parentElement;
+    const id = parentDiv.id.split("_").slice(2).join("_");
+    form.setAttribute("id", `setlist_setlist_items_attributes_${id}_id`);
+    form.setAttribute("name", `setlist[setlist_items_attributes][${id}][id]`);
   });
 }
