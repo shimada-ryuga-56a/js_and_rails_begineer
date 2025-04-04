@@ -11,6 +11,23 @@ document.addEventListener("turbo:render", setupAddItemButton);
 document.addEventListener("turbo:render", setupRemoveButton);
 document.addEventListener("turbo:render", cleanupItemFormIDs);
 
+function setupAddItemButton() {
+  const addButtonContainer = document.getElementById("add-button-container");
+  if (!addButtonContainer) {
+    console.log("セットリスト登録において必要な要素が見つかりません");
+    return;
+  }
+  console.log("setupAddItemButtonが呼ばれました");
+  addButtonContainer.addEventListener("click", (event) => {
+    console.log("setupAddItemButtonのイベントが発火しました");
+    if (event.target.id === "add_setlist_item") {
+      event.preventDefault();
+      addSetlistItemForm();
+    }
+  });
+  addButtonContainer.setAttribute("id", "setup-add-button-container");
+}
+
 function setupRemoveButton() {
   const setlistItemsContainer = document.getElementById("setlist_items_container");
   if (!setlistItemsContainer) {
@@ -28,23 +45,6 @@ function setupRemoveButton() {
       console.log("削除ボタンが無効かも！");
     }
   });
-}
-
-function setupAddItemButton() {
-  const addButtonContainer = document.getElementById("add-button-container");
-  if (!addButtonContainer) {
-    console.log("セットリスト登録において必要な要素が見つかりません");
-    return;
-  }
-  console.log("setupAddItemButtonが呼ばれました");
-  addButtonContainer.addEventListener("click", (event) => {
-    console.log("setupAddItemButtonのイベントが発火しました");
-    if (event.target.id === "add_setlist_item") {
-      event.preventDefault();
-      addSetlistItemForm();
-    }
-  });
-  addButtonContainer.setAttribute("id", "setup-add-button-container");
 }
 
 function cleanupItemFormIDs() {
