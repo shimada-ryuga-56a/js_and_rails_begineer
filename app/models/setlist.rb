@@ -15,8 +15,12 @@ class Setlist < ApplicationRecord
   end
 
   def set_position_to_items
-    setlist_items.each_with_index do |item, index|
-      item.position = index + 1
+    index = 1
+    setlist_items.each do |item|
+      # itemがmark_for_destructionされている場合はpositionを設定しない
+      next if item.marked_for_destruction?
+      item.position = index
+      index += 1
     end
   end
 end
