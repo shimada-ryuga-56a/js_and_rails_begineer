@@ -5,6 +5,8 @@
 
 document.addEventListener("turbo:load", setupAddItemButton);
 document.addEventListener("turbo:load", setupRemoveButton);
+document.addEventListener("turbo:load", cleanupItemFormIDs);
+document.addEventListener("turbo:load", moveHiddenSetlistItemForm);
 document.addEventListener("turbo:render", setupAddItemButton);
 document.addEventListener("turbo:render", setupRemoveButton);
 document.addEventListener("turbo:render", cleanupItemFormIDs);
@@ -60,6 +62,19 @@ function cleanupItemFormIDs() {
     form.setAttribute("id", `setlist_setlist_items_attributes_${index}_song_title`)
     form.setAttribute("name", `setlist[setlist_items_attributes][${index}][song_title]`)
   });
+
+  const setlistItemIds = document.querySelectorAll('[id^="setlist_item_"]');
+  if (setlistItemIds.length === 0) {
+    console.log("セットリストアイテムIDが見つかりません");
+    return;
+  }
+  setlistItemIds.forEach((item, index) => {
+    if (setlistItemIds.length === index + 1) {
+      console.log("templateのため処理をスキップ");
+      return;
+    }
+    item.setAttribute("id", `setlist_item_${index}`);
+  });
 }
 
 function addSetlistItemForm() {
@@ -73,4 +88,25 @@ function addSetlistItemForm() {
   itemFormClone.children[1].setAttribute("id", "setlist_setlist_items_attributes__song_title");
   container.appendChild(itemFormClone);
   cleanupItemFormIDs();
+}
+
+function moveHiddenSetlistItemForm(){
+  const hidden_forms = document.querySelectorAll('[id^="setlist_setlist_items_attributes_"][id$="_id"]');
+  if (hidden_forms.length === 0) {
+    console.log("隠しフォームが見つかりません");
+    return;
+  }
+  hidden_forms.forEach((form, index) => {
+    // formのsetlist_setlist_items_attributes_と_idの間の部分を取得
+    const id = form.id.split("_").slice(4, -1).join("_");
+    const parentDiv = document.getElementById(`setlist_item_${id}`);
+    if (!parentDiv) {
+      console.log("親要素が見つかりません");
+      return;
+    }
+    const childrenClone = form.cloneNode(true);
+    console.log(childrenClone);
+    parentDiv.appendChild(childrenClone);
+    form.remove();
+  });
 }
