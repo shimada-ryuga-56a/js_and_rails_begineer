@@ -26,17 +26,8 @@ class SetlistsController < ApplicationController
 
   def update
     @setlist = Setlist.find(params[:id])
-    # パラメータに含まれていない setlist_items は削除する
-    ids_for_update = Array.new
-    params[:setlist][:setlist_items_attributes].each do |_, item|
-      ids_for_update << item[:id] if item[:id].present?
-    end
-    @setlist.setlist_items.each_with_index do |item|
-      if item.id.present? && !ids_for_update.include?(item.id.to_s)
-        item.mark_for_destruction
-        Rails.logger.info "削除しました"
-      end
-    end
+    ids_for_update = get_ids_for_update
+    @setlist.remove_not_included_items(ids_for_update)
     if @setlist.update(setlist_params)
       flash[:success] = "セットリストを更新しました。"
       redirect_to setlists_path
@@ -66,5 +57,13 @@ class SetlistsController < ApplicationController
     params.require(:setlist).permit(
       setlist_items_attributes: %i(song_title position id _destroy)
     )
+  end
+
+  def get_ids_for_update
+    ids_for_update = []
+    params[:setlist][:setlist_items_attributes].each do |_, item|
+      ids_for_update << item[:id] if item[:id].present?
+    end
+    ids_for_update
   end
 end
