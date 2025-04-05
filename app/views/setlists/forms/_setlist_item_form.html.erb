@@ -1,6 +1,7 @@
 <div class="flex items-center mb-4" id="setlist_item_">
   <%= i.label :song_title, "曲名", class: "mr-4" %>
   <%= i.text_field :song_title, class: "input input-bordered w-full max-w-xs" %>
+  <%= i.hidden_field :position %>
   <i class="fa-solid fa-arrow-up ml-4 border-2 p-2 rounded-md" id="items_up_"></i>
   <i class="fa-solid fa-arrow-down ml-4 border-2 p-2 rounded-md" id="items_down_"></i>
   <div class="ml-4 btn btn-neutral" id="remove_setlist_item_">
