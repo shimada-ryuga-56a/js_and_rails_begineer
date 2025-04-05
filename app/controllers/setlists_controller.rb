@@ -32,9 +32,6 @@ class SetlistsController < ApplicationController
       flash[:success] = "セットリストを更新しました。"
       redirect_to setlists_path
     else
-      p "=" * 50
-      p @setlist.errors.full_messages
-      p "=" * 50
       flash.now[:error] = "セットリストの更新に失敗しました。"
       render :edit, status: :unprocessable_entity
     end
