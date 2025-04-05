@@ -26,6 +26,7 @@ function setupAddItemButton() {
     }
   });
   addButtonContainer.setAttribute("id", "setup-add-button-container");
+  setupArrowButtons();
 }
 
 function setupRemoveButton() {
@@ -42,6 +43,7 @@ function setupRemoveButton() {
       itemFormToRemove.remove();
       cleanupItemFormIDs();
       setupHiddenIdForms();
+      setupPositionForm();
     } else {
       console.log("削除ボタンが無効かも！");
     }
@@ -123,5 +125,60 @@ function setupHiddenIdForms() {
     const id = parentDiv.id.split("_").slice(2).join("_");
     form.setAttribute("id", `setlist_setlist_items_attributes_${id}_id`);
     form.setAttribute("name", `setlist[setlist_items_attributes][${id}][id]`);
+  });
+}
+
+function setupArrowButtons() {
+  const setlistItemsContainer = document.getElementById("setlist_items_container");
+  if (!setlistItemsContainer) {
+    console.log("セットリスト登録において必要な要素が見つかりません");
+    return;
+  }
+
+  setlistItemsContainer.addEventListener("click", (event) => {
+    console.log("setupArrowButtonsのイベントが発火しました");
+    console.log("event.target.id", event.target.id);
+    if (event.target.id.startsWith("items_up")) {
+      event.preventDefault();
+      const itemFormToUp = event.target.parentElement;
+      const itemFormToDown = itemFormToUp.previousElementSibling;
+      if (!itemFormToDown) {
+        console.log("上に移動できません");
+        return;
+      }
+      const parentDiv = itemFormToUp.parentElement;
+      parentDiv.insertBefore(itemFormToUp, itemFormToDown);
+    } else if (event.target.id.startsWith("items_down")) {
+      event.preventDefault();
+      const itemFormToDown = event.target.parentElement;
+      const itemFormToUp = itemFormToDown.nextElementSibling;
+      if (!itemFormToUp) {
+        console.log("下に移動できません");
+        return;
+      }
+      const parentDiv = itemFormToDown.parentElement;
+      console.log("parentDiv", parentDiv);
+      parentDiv.insertBefore(itemFormToUp, itemFormToDown);
+    }
+    cleanupItemFormIDs();
+    setupHiddenIdForms();
+    setupPositionForm();
+  })
+}
+
+function setupPositionForm() {
+  const positionForms = document.querySelectorAll('[id^="setlist_setlist_items_attributes_"][id$="_position"]');
+  if (positionForms.length === 0) {
+    console.log("ポジションフォームが見つかりません");
+    return;
+  }
+  positionForms.forEach((form, index) => {
+    if (positionForms.length === index + 1) {
+      console.log("templateのため処理をスキップ");
+      return;
+    }
+    form.setAttribute("id", `setlist_setlist_items_attributes_${index}_position`);
+    form.setAttribute("name", `setlist[setlist_items_attributes][${index}][position]`);
+    form.value = index + 1;
   });
 }
