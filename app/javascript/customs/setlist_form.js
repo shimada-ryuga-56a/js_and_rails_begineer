@@ -26,6 +26,7 @@ function setupAddItemButton() {
     }
   });
   addButtonContainer.setAttribute("id", "setup-add-button-container");
+  setupArrowButtons();
 }
 
 function setupRemoveButton() {
@@ -124,4 +125,43 @@ function setupHiddenIdForms() {
     form.setAttribute("id", `setlist_setlist_items_attributes_${id}_id`);
     form.setAttribute("name", `setlist[setlist_items_attributes][${id}][id]`);
   });
+}
+
+function setupArrowButtons() {
+  const setlistItemsContainer = document.getElementById("setlist_items_container");
+  if (!setlistItemsContainer) {
+    console.log("セットリスト登録において必要な要素が見つかりません");
+    return;
+  }
+
+  setlistItemsContainer.addEventListener("click", (event) => {
+    console.log("setupArrowButtonsのイベントが発火しました");
+    console.log("event.target.id", event.target.id);
+    if (event.target.id.startsWith("items_up")) {
+      event.preventDefault();
+      const itemFormToUp = event.target.parentElement;
+      const itemFormToDown = itemFormToUp.previousElementSibling;
+      if (!itemFormToDown) {
+        console.log("上に移動できません");
+        return;
+      }
+      const parentDiv = itemFormToUp.parentElement;
+      parentDiv.insertBefore(itemFormToUp, itemFormToDown);
+      cleanupItemFormIDs();
+      setupHiddenIdForms();
+    } else if (event.target.id.startsWith("items_down")) {
+      event.preventDefault();
+      const itemFormToDown = event.target.parentElement;
+      const itemFormToUp = itemFormToDown.nextElementSibling;
+      if (!itemFormToUp) {
+        console.log("下に移動できません");
+        return;
+      }
+      const parentDiv = itemFormToDown.parentElement;
+      console.log("parentDiv", parentDiv);
+      parentDiv.insertBefore(itemFormToUp, itemFormToDown);
+      cleanupItemFormIDs();
+      setupHiddenIdForms();
+    }
+  })
 }
