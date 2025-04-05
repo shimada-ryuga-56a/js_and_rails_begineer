@@ -1,78 +1,127 @@
-document.addEventListener("turbo:load", setupRemoveButton);
+// document.addEventListener("turbo:load", setupRemoveButton);
+// document.addEventListener("turbo:load", setupAddItemButton);
+// document.addEventListener("turbo:render", setupRemoveButton);
+// document.addEventListener("turbo:render", setupAddItemButton);
+
 document.addEventListener("turbo:load", setupAddItemButton);
-document.addEventListener("turbo:render", setupRemoveButton);
+document.addEventListener("turbo:load", setupRemoveButton);
+document.addEventListener("turbo:load", cleanupItemFormIDs);
+document.addEventListener("turbo:load", moveHiddenSetlistItemForm);
 document.addEventListener("turbo:render", setupAddItemButton);
+document.addEventListener("turbo:render", setupRemoveButton);
+document.addEventListener("turbo:render", cleanupItemFormIDs);
 
 function setupAddItemButton() {
-  const itemForms = document.querySelectorAll("[id^='setlist_setlist_items_attributes_'][id$='_song_title']");
-  const lastItemForm = itemForms[itemForms.length - 2];
-  const lastItemFormId = lastItemForm ? lastItemForm.id : null;
-  const lastItemFormIndex = lastItemFormId ? parseInt(lastItemFormId.match(/\d+/)[0]) : null;
-  let count = lastItemFormIndex;
-  console.log("セットリスト登録フォーム用js");
-  const addItemButton = document.getElementById("add_setlist_item");
-  const setlistItemContainer = document.getElementById("setlist_items_container");
-  const itemForm = document.getElementById("template_setlist_item");
-
-  if (!addItemButton || !setlistItemContainer || !itemForm) {
-    console.log("必要な要素が見つかりません");
+  const addButtonContainer = document.getElementById("add-button-container");
+  if (!addButtonContainer) {
+    console.log("セットリスト登録において必要な要素が見つかりません");
     return;
   }
-
-  if (addItemButton.getAttribute("id") === "add_item_button") {
-    console.log("ボタンがすでに設定されています");
-    return;
-  } else {
-    console.log("ボタンが設定されていません");
-    addItemButton.setAttribute("id", "add_item_button");
-  }
-
-  // 「曲を追加」ボタンにイベントを設定
-  addItemButton.addEventListener("click", () => {
-    counter();
-    console.log("カウント", count);
-    const itemFormClone = itemForm.children[0].cloneNode(true);
-    itemFormClone.children[1].setAttribute("name", `setlist[setlist_items_attributes][${count}][song_title]`);
-    itemFormClone.children[1].setAttribute("id", `setlist_setlist_items_attributes_${count}_song_title`);
-
-    const removeButton = itemFormClone.querySelector("[id^='remove_setlist_item']");
-    removeButton.setAttribute("id", `remove_setlist_item_${count}`);
-    removeButton.addEventListener("click", (event) => {
+  console.log("setupAddItemButtonが呼ばれました");
+  addButtonContainer.addEventListener("click", (event) => {
+    console.log("setupAddItemButtonのイベントが発火しました");
+    if (event.target.id === "add_setlist_item") {
       event.preventDefault();
-      const itemFormToRemove = removeButton.parentElement;
-      itemFormToRemove.remove();
-      console.log("削除ボタンが押されました");
-    });
-    console.log(itemFormClone);
-    setlistItemContainer.appendChild(itemFormClone);
+      addSetlistItemForm();
+    }
   });
-
-  function counter() {
-    count++;
-    return count;
-  }
-};
+  addButtonContainer.setAttribute("id", "setup-add-button-container");
+}
 
 function setupRemoveButton() {
-  console.log("removeButton");
-  const removeButtons = document.querySelectorAll("[id^='remove_setlist_item_']");
-  removeButtons.forEach((removeButton, index) => {
-    if (removeButton.getAttribute("id") === `remove_setlist_item_${index}`) {
-      console.log("ボタンがすでに設定されています");
+  const setlistItemsContainer = document.getElementById("setlist_items_container");
+  if (!setlistItemsContainer) {
+    console.log("セットリスト登録において必要な要素が見つかりません");
+    return;
+  }
+
+  setlistItemsContainer.addEventListener("click", (event) => {
+    if (event.target.id.startsWith("remove_setlist_item_")) {
+      event.preventDefault();
+      const itemFormToRemove = event.target.parentElement;
+      itemFormToRemove.remove();
+      cleanupItemFormIDs();
+      setupHiddenIdForms();
+    } else {
+      console.log("削除ボタンが無効かも！");
+    }
+  });
+}
+
+function cleanupItemFormIDs() {
+  const setlistItemForms = document.querySelectorAll('[id^="setlist_setlist_items_attributes_"][id$="_song_title"]');
+  if (setlistItemForms.length === 0) {
+    console.log("セットリストアイテムフォームが見つかりません");
+    return;
+  }
+
+  setlistItemForms.forEach((form, index) => {
+    if (setlistItemForms.length === index + 1) {
+      console.log("templateのため処理をスキップ");
       return;
     }
-    removeButton.setAttribute("id", `remove_setlist_item_${index}`);
-    removeButton.addEventListener("click", (event) => {
-      event.preventDefault();
-      const itemFormToRemove = removeButton.parentElement;
-      itemFormToRemove.remove();
-
-      const idFormToRemove = document.getElementById(`setlist_setlist_items_attributes_${index}_id`);
-      if (idFormToRemove) {
-        console.log("idFormToRemove", idFormToRemove);
-        idFormToRemove.remove();
-      }
-      console.log("削除ボタンが押されました");
-    });
+    form.setAttribute("id", `setlist_setlist_items_attributes_${index}_song_title`)
+    form.setAttribute("name", `setlist[setlist_items_attributes][${index}][song_title]`)
   });
-};
+
+  const setlistItemIds = document.querySelectorAll('[id^="setlist_item_"]');
+  if (setlistItemIds.length === 0) {
+    console.log("セットリストアイテムIDが見つかりません");
+    return;
+  }
+  setlistItemIds.forEach((item, index) => {
+    if (setlistItemIds.length === index + 1) {
+      console.log("templateのため処理をスキップ");
+      return;
+    }
+    item.setAttribute("id", `setlist_item_${index}`);
+  });
+}
+
+function addSetlistItemForm() {
+  const container = document.getElementById("setlist_items_container");
+  const itemFormTemplate = document.getElementById("template_setlist_item");
+  if (!container || !itemFormTemplate) {
+    console.log("フォーム追加のためのアイテムが見つかりません");
+    return;
+  }
+  const itemFormClone = itemFormTemplate.children[0].cloneNode(true);
+  itemFormClone.children[1].setAttribute("id", "setlist_setlist_items_attributes__song_title");
+  container.appendChild(itemFormClone);
+  cleanupItemFormIDs();
+}
+
+function moveHiddenSetlistItemForm(){
+  const hidden_forms = document.querySelectorAll('[id^="setlist_setlist_items_attributes_"][id$="_id"]');
+  if (hidden_forms.length === 0) {
+    console.log("隠しフォームが見つかりません");
+    return;
+  }
+  hidden_forms.forEach((form, index) => {
+    // formのsetlist_setlist_items_attributes_と_idの間の部分を取得
+    const id = form.id.split("_").slice(4, -1).join("_");
+    const parentDiv = document.getElementById(`setlist_item_${id}`);
+    if (!parentDiv) {
+      console.log("親要素が見つかりません");
+      return;
+    }
+    const childrenClone = form.cloneNode(true);
+    console.log(childrenClone);
+    parentDiv.appendChild(childrenClone);
+    form.remove();
+  });
+}
+
+function setupHiddenIdForms() {
+  const hiddenItemIds = document.querySelectorAll('[id^="setlist_setlist_items_attributes_"][id$="_id"]');
+  if (hiddenItemIds.length === 0) {
+    console.log("隠しフォームが見つかりません");
+    return;
+  }
+  hiddenItemIds.forEach((form) => {
+    const parentDiv = form.parentElement;
+    const id = parentDiv.id.split("_").slice(2).join("_");
+    form.setAttribute("id", `setlist_setlist_items_attributes_${id}_id`);
+    form.setAttribute("name", `setlist[setlist_items_attributes][${id}][id]`);
+  });
+}
